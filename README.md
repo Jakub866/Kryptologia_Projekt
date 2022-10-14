@@ -11,7 +11,7 @@ Wybrane kody:
 - Atbash
 - Vigenère
 - Podstawieniowy
-- TODO
+- Vernam
 
 ###### Możliwe do zrobienia 'Enigma'
 
