@@ -1,4 +1,3 @@
-
 def toAtBash(text):
     characters = list(text)
     result =''

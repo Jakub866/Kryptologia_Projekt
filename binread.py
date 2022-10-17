@@ -1,4 +1,6 @@
 import cezar
+import atbasz as at
+import binascii
 
 
 OriginalFile = open("Testowy.jpg", "rb")
