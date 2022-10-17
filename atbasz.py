@@ -7,7 +7,7 @@ def toAtBash(text):
         else:
             result+= character
 
-    print(f"weszlo jako {characters} wyszlo jako {result}")
+    #print(f"weszlo jako {characters} wyszlo jako {result}")
     return result
 
 

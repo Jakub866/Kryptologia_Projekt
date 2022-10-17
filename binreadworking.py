@@ -1,47 +1,37 @@
-import base64
 import binascii
-import string
+import atbasz
+import cezar as cz
 
 
-def enc_ceasar(n, plaintext):
-    key = "".join((chr(i) for i in range(128)))
-    result =''
-    for l in plaintext:
-        i =(key.index(l) + n) % 128
-        result += key[i]
-    return result
+def saving_encrypting(choose_encryption_method: int, src_f: str):
+    index_key = "".join((chr(i) for i in range(128)))
+    ces_shift = "t"
+    OriginalFile = open(src_f, "rb")
+    EncryptedFile = open("Encrypted_" + src_f, "w")
+    while (byte := OriginalFile.read(1)):
+        non_crypted_double_bytes = bytes.hex(byte)
+        for non_crypted_single_bytes in non_crypted_double_bytes:
+            match choose_encryption_method:
+                case 1:
+                    if ces_shift == "t":
+                        print("Przesunięcie: ", end='')
+                        ces_shift = int(input())
+                    EncryptedFile.write(str(index_key.index(cz.enc_ceasar(ces_shift,non_crypted_single_bytes))))
+                case 2:                            
+                    EncryptedFile.write(str(index_key.index(atbasz.toAtBash(non_crypted_single_bytes))))
+                case default:
+                    print("Encryption method not found")
+                    quit()
+            #print(index_key.index(enc_ceasar(32,z)))
+            
+            #writer.write(str(index_key.index(atbasz.toAtBash(z))))
+            EncryptedFile.write("\n")
+    OriginalFile.close()
+    EncryptedFile.close()
 
-def dec_ceasar(n,cyphertext):
-    key = "".join((chr(i) for i in range(128)))
-    #print(key)
-    result =''
-    for l in cyphertext:
-            i = (key.index(l) - n) % 128
-            result += key[i]
-    return result
-index_key = "".join((chr(i) for i in range(128)))
-
-with open("Source.jpg", "rb") as reader:
-    crypted_bytes =[]
-    non_crypted_bytes =[]
-
-    while (byte := reader.read(1)):
-        non_crypted_bytes.append(bytes.hex(byte))
-
-    with open("Encrypred.jpg", "w") as writer:
-        for x in non_crypted_bytes:
-            for z in x:
-                #print(index_key.index(enc_ceasar(32,z)))
-                writer.write(str(index_key.index(enc_ceasar(32,z))))
-                writer.write("\n")
-
-
-reader.close()
-writer.close()
-
-
+saving_encrypting(2, "Source.jpg")
 sending_bytes =[]
-with open("Encrypred.jpg", "r") as reader:
+with open("Encrypred_" + "Source.jpg", "r") as reader:
     while (byte := reader.readline()):
         byte = byte.strip()
         #print(byte)
@@ -51,9 +41,10 @@ with open("Encrypred.jpg", "r") as reader:
         wynik = ''
         moze = True
         for x in sending_bytes:
-           # print(x, "->", index_key[int(x)], "<-", dec_ceasar(32, index_key[int(x)]))
+            #print(x, "->", index_key[int(x)], "<-", dec_ceasar(32, index_key[int(x)]))
             x =  index_key[int(x)]
-            x = dec_ceasar(32, x)
+            #x = cz.dec_ceasar(32, x)
+            x = atbasz.toAtBash(x)
             #print(x)
             if moze:
                 wynik = wynik + x
