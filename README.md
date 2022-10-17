@@ -7,11 +7,11 @@
 Język programowania `Python`
 
 Wybrane kody:
-- Cesar
-- Atbash
-- Vigenère
-- Podstawieniowy
-- Vernam
+- [x]Cesar
+- [x]Atbash
+- []Vigenère
+- []Podstawieniowy
+- []Vernam
 
 ###### Możliwe do zrobienia 'Enigma'
 
