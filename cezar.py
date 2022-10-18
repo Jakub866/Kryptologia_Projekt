@@ -1,4 +1,4 @@
-def enc_ceasar(n, plaintext):
+def enc_ceasar(n, plaintext: str):
     key = ''.join(chr(i) for i in range(128))
     result =''
     for l in plaintext:
@@ -6,7 +6,7 @@ def enc_ceasar(n, plaintext):
         result += key[i]
     return result
 
-def dec_ceasar(n,cyphertext):
+def dec_ceasar(n: int,cyphertext: str):
     key = ''.join(chr(i) for i in range(128))
     result =''
     for l in cyphertext:
