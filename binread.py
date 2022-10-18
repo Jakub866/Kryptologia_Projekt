@@ -1,29 +1,57 @@
-import cezar
-import atbasz as at
 import binascii
+import atbasz
+import cezar as cz
 
 
-OriginalFile = open("Testowy.jpg", "rb")
-EncryptedFile = open("EncryptedTestowy.jpg", "w")
-while (byte := OriginalFile.read(1)):
-    LengthOfByte = len(str(byte)) - 1
-    EncryptedByte = cezar.enc_ceasar(5, str(byte)[2:LengthOfByte])
-    EncryptedByte = EncryptedByte + "\n"
-    EncryptedFile.write(EncryptedByte)
+index_key = "".join((chr(i) for i in range(128)))
 
-OriginalFile.close()
-EncryptedFile.close()
+def saving_encrypting(choose_encryption_method: int, src_f: str):
+    ces_shift = ""
+    OriginalFile = open(src_f, "rb")
+    EncryptedFile = open("Encrypted_" + src_f, "w")
+    while (byte := OriginalFile.read(1)):
+        non_crypted_double_bytes = bytes.hex(byte)
+        for non_crypted_single_bytes in non_crypted_double_bytes:
+            match choose_encryption_method:
+                case 1:
+                    if ces_shift == "":
+                        print("Przesunięcie: ", end='')
+                        ces_shift = int(input())
+                    EncryptedFile.write(str(index_key.index(cz.enc_ceasar(ces_shift,non_crypted_single_bytes))))
+                case 2:         
+                    EncryptedFile.write(str(index_key.index(atbasz.toAtBash(non_crypted_single_bytes))))                
+                case default:
+                    print("Encryption method not found")
+                    quit()
+            EncryptedFile.write("\n")
+    OriginalFile.close()
+    EncryptedFile.close()
 
-File2Decrypt = open("EncryptedTestowy.jpg", "r")
-DecryptedFile = open("WynikTestowy.jpg", "wb")
+def reading_decrypting(choose_encryption_method: int, src_f: str):
+    EncrypredFile = open("Encrypted_" + src_f, "r")
+    DecryptedFile = open("Decrypted_" + src_f, "wb")
+    ces_shift = ""
+    wynik = ''
+    while (byte := EncrypredFile.readline()):
+        byte = byte.strip()
+        byte =  index_key[int(byte)]
+        match choose_encryption_method:
+                case 1:
+                    if ces_shift == "":
+                        print("Przesunięcie: ", end='')
+                        ces_shift = int(input())
+                    byte = cz.dec_ceasar(32, byte)
+                case 2:         
+                    byte = atbasz.toAtBash(byte)                
+                case default:
+                    print("Encryption method not found")
+                    quit()
+        wynik = wynik + byte
+        if len(wynik) == 2:
+            DecryptedFile.write(binascii.unhexlify(wynik))
+            wynik = ''
+    DecryptedFile.close()
+    EncrypredFile.close()
 
-while (line := File2Decrypt.readline()):
-    LengthOfByte = len(str(line)) - 1
-    DecryptedByte = cezar.dec_ceasar(5, str(line))
-    if DecryptedByte[LengthOfByte].encode("UTF-8") == b'\x05':
-        DecryptedByte = DecryptedByte[:LengthOfByte]
-    if len(DecryptedByte) == 3:
-        ToWrite = DecryptedByte.encode()
-    else:
-        ToWrite = DecryptedByte.encode().decode('unicode_escape').encode("raw_unicode_escape")
-    DecryptedFile.write(ToWrite)
+saving_encrypting(1, "Source.jpg")
+reading_decrypting(1, "Source.jpg")
