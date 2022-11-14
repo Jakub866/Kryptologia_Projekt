@@ -2,17 +2,22 @@
     color: 0,0,0,1
 
 
+
+
+
+
+
 <Main_page>
 
     GridLayout:
         size: root.width, root.height
+        spacing: 10
+        padding:25, 10
         cols:1
         canvas.before:
             Color:
-                rgba: 1, 1, 1, 1
-            Rectangle:
-                pos: self.pos
-                size: self.size
+                rgb: (1,0,0,1)
+
 
         Image:
             source: "logo.png"
@@ -24,24 +29,42 @@
             font_size: self.width/25
         Button:
             text: "Ceasar Cypher"
-            id: site
-            on_press: root.manager.current = "SecondPage"
+            id: Ceasar
+            background_normal: ''
+
+            on_press: root.manager.current = "CaesarPage"
+
+
+
         Button:
             text: "Atbash"
-            id: site
-            on_press: root.manager.current = "SecondPage"
+            id: Atbash
+            on_press: root.manager.current = "AtbashPage"
+            background_normal: ''
+
+
         Button:
             text: "Veginere Cypher"
-            id: site
-            on_press: root.manager.current = "SecondPage"
+            id: Veginere
+            on_press: root.manager.current = "VeginerePage"
+            background_normal: ''
+
+
         Button:
             text: "Substitution Cypher"
-            id: site
-            on_press: root.manager.current = "SecondPage"
+            id: Substitution
+            on_press: root.manager.current = "SubstitutionPage"
+            background_normal: ''
+
+
         Button:
             text: "Vernam Cypher"
-            id: site
-            on_press: root.manager.current = "SecondPage"
+            id: Vernam
+            on_press: root.manager.current = "VernamPage"
+            background_normal: ''
+
+
+
         GridLayout:
             cols:3
 
@@ -60,105 +83,4 @@
 
 
 
-<Second_page>
 
-    text_input: text_input
-
-
-    keyphrase:keyphrase
-
-
-    GridLayout:
-        size: root.width, root.height
-        canvas.before:
-            Color:
-                rgba: 1, 1, 1, 1
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        cols:2
-
-
-        GridLayout:
-            cols:1
-
-
-            Label:
-                id: text_input
-                text: ''
-
-
-            Button:
-                text: "Load File"
-                on_release: root.show_load()
-                multiline:False
-
-
-            TextInput:
-                id: keyphrase
-                multiline:False
-
-            Label:
-                text: "Keyphrase"
-
-
-            Button:
-                text: "Back"
-                on_press: root.manager.current = "MainPage"
-
-
-        Image:
-            source: "logo.png"
-
-
-<LoadDialog>:
-    canvas.before:
-        Color:
-            rgba: 1, 1, 1, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    BoxLayout:
-        size: root.size
-        pos: root.pos
-        orientation: "vertical"
-        FileChooserListView:
-            id: filechooser
-
-        BoxLayout:
-            size_hint_y: None
-            height: 30
-            Button:
-                text: "Cancel"
-                on_release: root.cancel()
-
-            Button:
-                text: "Load"
-                on_release: root.load(filechooser.path, filechooser.selection)
-
-<SaveDialog>:
-    text_input: text_input
-    BoxLayout:
-        size: root.size
-        pos: root.pos
-        orientation: "vertical"
-        FileChooserListView:
-            id: filechooser
-            on_selection: text_input.text = self.selection and self.selection[0] or ''
-
-        TextInput:
-            id: text_input
-            size_hint_y: None
-            height: 30
-            multiline: False
-
-        BoxLayout:
-            size_hint_y: None
-            height: 30
-            Button:
-                text: "Cancel"
-                on_release: root.cancel()
-
-            Button:
-                text: "Save"
-                on_release: root.save(filechooser.path, text_input.text)
