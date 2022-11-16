@@ -1,13 +1,28 @@
+#:include ceasar.kv
+#:include atbash.kv
+#:include veginere.kv
+#:include substitution.kv
+#:include vernam.kv
+
+
+
+WindowManager:
+    Main_page:
+        name: "main"
+    Caesar_Page:
+        name: "cezar"
+    Atbash_Page:
+    Veginere_Page:
+    Substitution_Page:
+    Vernam_Page:
+
+
+
 <Label>
     color: 0,0,0,1
 
-
-
-
-
-
-
-<Main_page>
+<Main_page>:
+    name: "main"
 
     GridLayout:
         size: root.width, root.height
@@ -28,39 +43,39 @@
             text: "Choose your cypher!"
             font_size: self.width/25
         Button:
-            text: "Ceasar Cypher"
+            text: "Ceasar Cipher"
             id: Ceasar
             background_normal: ''
 
-            on_press: root.manager.current = "CaesarPage"
+            on_press: app.root.current = "cezar"
 
 
 
         Button:
             text: "Atbash"
             id: Atbash
-            on_press: root.manager.current = "AtbashPage"
+            on_press: app.root.current = "AtbashPage"
             background_normal: ''
 
 
         Button:
             text: "Veginere Cypher"
             id: Veginere
-            on_press: root.manager.current = "VeginerePage"
+            on_press: app.root.current = "VeginerePage"
             background_normal: ''
 
 
         Button:
             text: "Substitution Cypher"
             id: Substitution
-            on_press: root.manager.current = "SubstitutionPage"
+            on_press: app.root.current = "SubstitutionPage"
             background_normal: ''
 
 
         Button:
             text: "Vernam Cypher"
             id: Vernam
-            on_press: root.manager.current = "VernamPage"
+            on_press: app.root.current = "VernamPage"
             background_normal: ''
 
 

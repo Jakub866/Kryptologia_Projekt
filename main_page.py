@@ -10,235 +10,95 @@ from kivy.uix.recycleview import RecycleView
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
-from kivy.properties import BooleanProperty, ObjectProperty
+
 from kivy.lang import Builder
-
-
-
+import os
+from kivy.uix.button import Button
+from plyer import filechooser
+from kivy.properties import ListProperty
+from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
+import cezar
 
 # #005776 hex of color blue
 
+
+class FileChoose(Button):
+    selection = ListProperty([])
+
+    def __init__(self, **kwargs):
+        super(FileChoose,self).__init__(**kwargs)
+
+    def choose(self,*args):
+        '''
+        Call plyer filechooser API to run a filechooser Activity.
+        '''
+        return filechooser.open_file()
+
+
+    def on_selection(self, *a, **k):
+        global path
+        path = str(self.selection).strip().strip("[").strip("]").strip("'")
+
+
+    #
+    #     # OriginalFile = open(path, "rb")
+    #     # while (byte := OriginalFile.read(1)):
+    #     #     print(byte)
+
+
+class WindowManager(ScreenManager):
+    pass
+
+
 class Main_page(Screen):
-    Builder.load_file('page.kv')
     Window.size = (800, 900)
-    Window.clearcolor = (1,1,1,1)
-
-
-
-class LoadDialog(FloatLayout):
-    load = ObjectProperty(None)
-    cancel = ObjectProperty(None)
-
-class SaveDialog(FloatLayout):
-    save = ObjectProperty(None)
-    text_input = ObjectProperty(None)
-    cancel = ObjectProperty(None)
-
+    Window.clearcolor = (1, 1, 1, 1)
 
 
 class Caesar_Page(Screen):
-
-    Builder.load_file("ceasar.kv")
     plaintext = ObjectProperty(None)
     keyphrase = ObjectProperty(None)
-    algorithm = ObjectProperty(None)
 
-    # Pod koncowy produkt
-    loadfile = ObjectProperty(None)
-    savefile = ObjectProperty(None)
-    text_input = ObjectProperty(None)
 
-    def press(self):
-        plaintext = self.plaintext.text
-        keyphrase = self.keyphrase.text
-        algorithm = self.algorithm.text
+    def set(self, *args):
+        data = str(FileChoose.choose(FileChoose)).strip().strip("[").strip("]").strip("'")
+        self.ids.directory.text = data
 
-        print(f" tekst jawny {plaintext} haslo {keyphrase} algorytm {algorithm}")
+    def encrypt(self,keyphrase,plaintext):
 
-        self.plaintext.text = ""
-        self.keyphrase.text = ""
-        self.algorithm.text = ""
 
-    def dismiss_popup(self):
-        self._popup.dismiss()
-
-    def show_load(self):
-        content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
-        self._popup = Popup(title="Load file", content=content,
-                            size_hint=(0.9, 0.9))
-        self._popup.open()
-
-    # ---==== Wyswietlenie lokalizacji pliku === -----
-    def load(self, path, filename):
-        self.text_input.text = str(filename).strip("[]").strip("'")
-
-        self.dismiss_popup()
-
+        print(f"{keyphrase.text} klucz")
+        print(f"{plaintext.text} tekst jawny")
+        ciphertext = cezar.enc_ceasar(int(keyphrase.text),plaintext.text)
+        self.ids.output.text = ciphertext
 
 
 class Atbash_Page(Screen):
-    Builder.load_file("atbash.kv")
-    plaintext = ObjectProperty(None)
-    keyphrase = ObjectProperty(None)
-    algorithm = ObjectProperty(None)
-
-    # Pod koncowy produkt
-    loadfile = ObjectProperty(None)
-    savefile = ObjectProperty(None)
-    text_input = ObjectProperty(None)
-
-    def press(self):
-        plaintext = self.plaintext.text
-        keyphrase = self.keyphrase.text
-        algorithm = self.algorithm.text
-
-        print(f" tekst jawny {plaintext} haslo {keyphrase} algorytm {algorithm}")
-
-        self.plaintext.text = ""
-        self.keyphrase.text = ""
-        self.algorithm.text = ""
-
-    def dismiss_popup(self):
-        self._popup.dismiss()
-
-    def show_load(self):
-        content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
-        self._popup = Popup(title="Load file", content=content,
-                            size_hint=(0.9, 0.9))
-        self._popup.open()
-
-    # ---==== Wyswietlenie lokalizacji pliku === -----
-    def load(self, path, filename):
-        self.text_input.text = str(filename).strip("[]").strip("'")
-
-        self.dismiss_popup()
+    pass
 
 
 class Veginere_Page(Screen):
-    Builder.load_file("veginere.kv")
-    plaintext = ObjectProperty(None)
-    keyphrase = ObjectProperty(None)
-    algorithm = ObjectProperty(None)
+    pass
 
-    # Pod koncowy produkt
-    loadfile = ObjectProperty(None)
-    savefile = ObjectProperty(None)
-    text_input = ObjectProperty(None)
-
-    def press(self):
-        plaintext = self.plaintext.text
-        keyphrase = self.keyphrase.text
-        algorithm = self.algorithm.text
-
-        print(f" tekst jawny {plaintext} haslo {keyphrase} algorytm {algorithm}")
-
-        self.plaintext.text = ""
-        self.keyphrase.text = ""
-        self.algorithm.text = ""
-
-    def dismiss_popup(self):
-        self._popup.dismiss()
-
-    def show_load(self):
-        content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
-        self._popup = Popup(title="Load file", content=content,
-                            size_hint=(0.9, 0.9))
-        self._popup.open()
-
-    # ---==== Wyswietlenie lokalizacji pliku === -----
-    def load(self, path, filename):
-        self.text_input.text = str(filename).strip("[]").strip("'")
-
-        self.dismiss_popup()
 
 class Substitution_Page(Screen):
-    Builder.load_file("substitution.kv")
-    plaintext = ObjectProperty(None)
-    keyphrase = ObjectProperty(None)
-    algorithm = ObjectProperty(None)
+    pass
 
-    # Pod koncowy produkt
-    loadfile = ObjectProperty(None)
-    savefile = ObjectProperty(None)
-    text_input = ObjectProperty(None)
-
-    def press(self):
-        plaintext = self.plaintext.text
-        keyphrase = self.keyphrase.text
-        algorithm = self.algorithm.text
-
-        print(f" tekst jawny {plaintext} haslo {keyphrase} algorytm {algorithm}")
-
-        self.plaintext.text = ""
-        self.keyphrase.text = ""
-        self.algorithm.text = ""
-
-    def dismiss_popup(self):
-        self._popup.dismiss()
-
-    def show_load(self):
-        content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
-        self._popup = Popup(title="Load file", content=content,
-                            size_hint=(0.9, 0.9))
-        self._popup.open()
-
-    # ---==== Wyswietlenie lokalizacji pliku === -----
-    def load(self, path, filename):
-        self.text_input.text = str(filename).strip("[]").strip("'")
-
-        self.dismiss_popup()
 
 class Vernam_Page(Screen):
-    Builder.load_file("vernam.kv")
-    plaintext = ObjectProperty(None)
-    keyphrase = ObjectProperty(None)
-    algorithm = ObjectProperty(None)
+    pass
 
-    # Pod koncowy produkt
-    loadfile = ObjectProperty(None)
-    savefile = ObjectProperty(None)
-    text_input = ObjectProperty(None)
 
-    def press(self):
-        plaintext = self.plaintext.text
-        keyphrase = self.keyphrase.text
-        algorithm = self.algorithm.text
-
-        print(f" tekst jawny {plaintext} haslo {keyphrase} algorytm {algorithm}")
-
-        self.plaintext.text = ""
-        self.keyphrase.text = ""
-        self.algorithm.text = ""
-
-    def dismiss_popup(self):
-        self._popup.dismiss()
-
-    def show_load(self):
-        content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
-        self._popup = Popup(title="Load file", content=content,
-                            size_hint=(0.9, 0.9))
-        self._popup.open()
-
-    # ---==== Wyswietlenie lokalizacji pliku === -----
-    def load(self, path, filename):
-        self.text_input.text = str(filename).strip("[]").strip("'")
-
-        self.dismiss_popup()
-
+kv = Builder.load_file('page.kv')
+sm = ScreenManager()
+sm.add_widget(Main_page(name='MainPage'))
+sm.add_widget(Caesar_Page(name ='cezar'))
 
 class PageApp(App):
 
     def build(self):
-        screenmanager =ScreenManager()
-        screenmanager.add_widget(Main_page(name ="MainPage"))
-        screenmanager.add_widget(Caesar_Page(name="CaesarPage"))
-        screenmanager.add_widget(Atbash_Page(name="AtbashPage"))
-
-        screenmanager.add_widget(Veginere_Page(name="VeginerePage"))
-        screenmanager.add_widget(Substitution_Page(name="SubstitutionPage"))
-        screenmanager.add_widget(Vernam_Page(name="VernamPage"))
-        return screenmanager
+        return sm
 
 
 if __name__ == "__main__":

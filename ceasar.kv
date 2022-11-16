@@ -1,6 +1,10 @@
-<Caesar_Page>
-    text_input: text_input
-    keyphrase:keyphrase
+<Caesar_Page>:
+
+
+
+    keyphrase: keyphrase
+    plaintext: plaintext
+
 
     BoxLayout:
         orientation: 'vertical'
@@ -42,10 +46,12 @@
                             width: 1.5
                             rectangle: self.x, self.y, self.width, self.height
 
-                    Button:
+                    FileChoose:
                         size_hint:0.3,0.1
                         text: "Load File"
-                        on_release: root.show_load()
+                        on_release: root.set()
+                        padding_x: 5
+
                         multiline:True
                         canvas.before:
                             Color:
@@ -53,12 +59,19 @@
                             Line:
                                 width: 1.5
                                 rectangle: self.x, self.y, self.width, self.height
+                    ScrollView:
+                        Label:
+                            text_size: None, self.height
+                            size_hint_x: None
+                            width: self.texture_size[0]
+                            text: ":"
+                            id: directory
 
-                    Label:
-                        id: text_input
-                        text: 'test'
 
-                Label:
+                TextInput:
+                    id: plaintext
+                    background_color: 0,0,0,0
+                    foreground_color: 0,0,0,0.7
                     text: "Place holder for file"
 
                 GridLayout:
@@ -87,10 +100,16 @@
                         foreground_color: 0,0,0,0.7
                         id: keyphrase
                         multiline:False
+                        text: "Klucz"
 
-                Button:
-                    size_hint:1,0.1
-                    text: "Encrypt"
+                GridLayout:
+                    cols:2
+                    size_hint:1, 0.1
+                    Button:
+                        text: "Encrypt"
+                        on_press: root.encrypt(keyphrase,plaintext)
+                    Button:
+                        text: "Decrypt"
 
 
 
@@ -103,31 +122,11 @@
                         width: 1.5
                         rectangle: self.x, self.y, self.width, self.height
 
-
-                GridLayout:
-                    cols:2
-                    size_hint:1,0.1
-                    canvas.before:
-                        Color:
-                            rgba: 0, 0, 0, 1
-                        Line:
-                            width: 1.5
-                            rectangle: self.x, self.y, self.width, self.height
-
-                    Button:
-                        size_hint:0.3,0.1
-                        text: "Load File"
-                        on_release: root.show_load()
-                        multiline:False
-
-                    Label:
-                        id: text_input
-                        text: 'test'
-
-
-
-                Label:
-                    text: "FILE TO DECRYPT?"
+                TextInput:
+                    background_color: 0,0,0,0
+                    foreground_color: 0,0,0,0.7
+                    text: "Encrypted/Decrypted file"
+                    id: output
 
 
 
@@ -142,27 +141,18 @@
                             rectangle: self.x, self.y, self.width, self.height
 
 
-                    Label:
-                        size_hint: 0.3,0.1
-                        text: "Keyphrase"
+
+                    FileChoose:
+                        size_hint:0.3,0.1
+                        text: "Save File"
+                        on_release: self.choose()
+                        multiline:False
                         canvas.before:
                             Color:
                                 rgba: 0, 0, 0, 1
                             Line:
                                 width: 1.5
                                 rectangle: self.x, self.y, self.width, self.height
-
-                    TextInput:
-                        background_color: 0,0,0,0
-                        foreground_color: 0,0,0,0.7
-                        id: keyphrase
-                        multiline:False
-
-                Button:
-                    size_hint:1,0.1
-                    text: "Decrypt"
-
-
 
 
 
@@ -181,12 +171,6 @@
 
 
 <LoadDialog>:
-    canvas.before:
-        Color:
-            rgba: 1, 1, 1, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
     BoxLayout:
         size: root.size
         pos: root.pos

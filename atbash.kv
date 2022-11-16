@@ -1,4 +1,5 @@
-<Atbash_Page>
+<Atbash_Page>:
+    name: "AtbashPage"
     text_input: text_input
     keyphrase:keyphrase
 
@@ -42,10 +43,10 @@
                             width: 1.5
                             rectangle: self.x, self.y, self.width, self.height
 
-                    Button:
+                    FileChoose:
                         size_hint:0.3,0.1
                         text: "Load File"
-                        on_release: root.show_load()
+                        on_release: self.choose()
                         multiline:True
                         canvas.before:
                             Color:
@@ -114,10 +115,10 @@
                             width: 1.5
                             rectangle: self.x, self.y, self.width, self.height
 
-                    Button:
+                    FileChoose:
                         size_hint:0.3,0.1
                         text: "Load File"
-                        on_release: root.show_load()
+                        on_release: self.choose()
                         multiline:False
 
                     Label:
