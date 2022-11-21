@@ -9,9 +9,9 @@ Język programowania `Python`
 Wybrane kody:
 - [x] Cesar
 - [x] Atbash
-- [ ] Vigenère
-- [ ] Podstawieniowy
-- [ ] Vernam
+- [x] Vigenère
+- [x] Podstawieniowy
+- [ ] Vernam - In progress
 
 ###### Możliwe do zrobienia 'Enigma'
 
