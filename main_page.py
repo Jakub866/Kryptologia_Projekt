@@ -1,24 +1,15 @@
 from kivy.app import App
-from kivy.uix.widget import Widget
-from kivy.uix.label import Label
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.widget import Widget
-from kivy.lang import Builder
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.popup import Popup
-from kivy.uix.recycleview import RecycleView
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.scrollview import ScrollView
-
 from kivy.lang import Builder
-import os
 from kivy.uix.button import Button
 from plyer import filechooser
 from kivy.properties import ListProperty
-from kivy.properties import ObjectProperty
-from kivy.properties import StringProperty
-import cezar
+
+import algorithms.ciphers.cezar as cezar
+import algorithms.ciphers.atbash as atbash
+import algorithms.ciphers.vigenere as vigenere
+import algorithms.ciphers.substitution as substitution
 
 # #005776 hex of color blue
 
@@ -30,21 +21,12 @@ class FileChoose(Button):
         super(FileChoose,self).__init__(**kwargs)
 
     def choose(self,*args):
-        '''
-        Call plyer filechooser API to run a filechooser Activity.
-        '''
         return filechooser.open_file()
 
 
     def on_selection(self, *a, **k):
         global path
         path = str(self.selection).strip().strip("[").strip("]").strip("'")
-
-
-    #
-    #     # OriginalFile = open(path, "rb")
-    #     # while (byte := OriginalFile.read(1)):
-    #     #     print(byte)
 
 
 class WindowManager(ScreenManager):
@@ -57,8 +39,12 @@ class Main_page(Screen):
 
 
 class Caesar_Page(Screen):
-    plaintext = ObjectProperty(None)
-    keyphrase = ObjectProperty(None)
+    def refresh(self):
+        self.ids.directory.text = ""
+        self.ids.keyphrase.text = "Place for a key"
+        self.ids.output.text = "Encrypted/Decrypted file"
+        self.ids.plaintext.text = "Place holder for file"
+        self.ids.status.text = ""
 
 
     def set(self, *args):
@@ -66,35 +52,127 @@ class Caesar_Page(Screen):
         self.ids.directory.text = data
 
     def encrypt(self,keyphrase,plaintext):
+        try:
+            ciphertext = cezar.enc_ceasar(int(keyphrase.text),plaintext.text)
+            self.ids.output.text = ciphertext
+            Caesar_Page.status(self, "Encryption done.")
+        except:
+            Caesar_Page.status(self, "Key must be a number between 1-26!")
+            return None
 
+    def decrypt(self, keyphrase, plaintext):
 
-        print(f"{keyphrase.text} klucz")
-        print(f"{plaintext.text} tekst jawny")
-        ciphertext = cezar.enc_ceasar(int(keyphrase.text),plaintext.text)
-        self.ids.output.text = ciphertext
+        try:
+            deciphertext = cezar.dec_ceasar(int(keyphrase.text),plaintext.text)
+            self.ids.output.text = deciphertext
+            Caesar_Page.status(self, "Decryption done.")
+        except:
+            Caesar_Page.status(self, "Key must be a number between 1-26!")
+            return None
 
+    def status(self,status):
+        self.ids.status.text = status
 
 class Atbash_Page(Screen):
-    pass
+
+    def refresh(self):
+        self.ids.directory.text = ""
+        self.ids.output.text = "Encrypted/Decrypted file"
+        self.ids.plaintext.text = "Place holder for file"
+        self.ids.status.text = ""
+
+    def set(self, *args):
+        data = str(FileChoose.choose(FileChoose)).strip().strip("[").strip("]").strip("'")
+        self.ids.directory.text = data
+
+    def encrypt(self,plaintext):
+        try:
+            ciphertext = atbash.toAtBash(plaintext.text)
+            self.ids.output.text = ciphertext
+            Atbash_Page.status(self, "Algorithm done.")
+        except:
+            Atbash_Page.status(self, "Something gone wrong")
+            return None
+
+    def status(self,status):
+        self.ids.status.text = status
 
 
-class Veginere_Page(Screen):
-    pass
 
+class Vigenere_Page(Screen):
+    def refresh(self):
+        self.ids.directory.text = ""
+        self.ids.keyphrase.text = "Place for a key"
+        self.ids.output.text = "Encrypted/Decrypted file"
+        self.ids.plaintext.text = "Place holder for file"
+        self.ids.status.text = ""
+
+    def set(self, *args):
+        data = str(FileChoose.choose(FileChoose)).strip().strip("[").strip("]").strip("'")
+        self.ids.directory.text = data
+
+    def encrypt(self, keyphrase, plaintext):
+        try:
+            ciphertext = vigenere.encryption(keyphrase.text, plaintext.text)
+            self.ids.output.text = ciphertext
+            Vigenere_Page.status(self, "Encryption done.")
+        except:
+            Vigenere_Page.status(self, "Something gone wrong.")
+
+
+    def decrypt(self, keyphrase, plaintext):
+        try:
+            deciphertext = vigenere.decryption(keyphrase.text, plaintext.text)
+            self.ids.output.text = deciphertext
+            Vigenere_Page.status(self, "Decryption done.")
+        except:
+            Vigenere_Page.status(self, "Something gone wrong.")
+
+    def status(self,status):
+        self.ids.status.text = status
 
 class Substitution_Page(Screen):
-    pass
+    def refresh(self):
+        self.ids.directory.text = ""
+        self.ids.keyphrase.text = "Place for a key"
+        self.ids.output.text = "Encrypted/Decrypted file"
+        self.ids.plaintext.text = "Place holder for file"
+        self.ids.status.text = ""
+
+    def set(self, *args):
+        data = str(FileChoose.choose(FileChoose)).strip().strip("[").strip("]").strip("'")
+        self.ids.directory.text = data
+
+    def encrypt(self, keyphrase, plaintext):
+        try:
+            ciphertext = substitution.enc_substit(keyphrase.text, plaintext.text)
+            self.ids.output.text = ciphertext
+            Substitution_Page.status(self, "Encryption done.")
+        except:
+            Substitution_Page.status(self, "Something gone wrong.")
+
+    def decrypt(self, keyphrase, plaintext):
+        try:
+            deciphertext = substitution.dec_substit(keyphrase.text, plaintext.text)
+            self.ids.output.text = deciphertext
+            Substitution_Page.status(self, "Decryption done.")
+        except:
+            Substitution_Page.status(self, "Something gone wrong.")
 
 
+    def status(self,status):
+        self.ids.status.text = status
 class Vernam_Page(Screen):
     pass
 
 
-kv = Builder.load_file('page.kv')
+kv = Builder.load_file('kivy_files\\page.kv')
 sm = ScreenManager()
-sm.add_widget(Main_page(name='MainPage'))
+sm.add_widget(Main_page(name='main'))
 sm.add_widget(Caesar_Page(name ='cezar'))
-
+sm.add_widget(Atbash_Page(name ='atbash'))
+sm.add_widget(Vigenere_Page(name ='vigenere'))
+sm.add_widget(Substitution_Page(name ="substit"))
 class PageApp(App):
 
     def build(self):
