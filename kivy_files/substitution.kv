@@ -1,7 +1,7 @@
 #:import Factory kivy.factory.Factory
 
 <SubtitPopup@Popup>:
-    title: 'How to use Ceasar Cipher'
+    title: 'How to use Substitution Cipher'
     size_hint: (None, None)
     size: (400, 225)
     Label:
@@ -9,7 +9,7 @@
         size_hint: 1, None
         height: self.texture_size[1]
         markup: True
-        text: "This is a most common medieval used monoalphabetic cipher.\nYou can use one from this modes:\n \n 1. Load file and set encryption/decryption path\n 2. Insert text in left input box.\n \n \n [b]Keyspace[/b]: All ASCII symbols"
+        text: "This is a most common medieval used monoalphabetic cipher.\nYou can use one from this modes:\n \n 1. Load file and set encryption/decryption path\n 2. Insert text in left input box.\n \n If you use both, the loaded file will have a priority \n \n [b]Keyspace[/b]: All ASCII symbols"
         color:1,1,1,1
 
 
@@ -207,10 +207,10 @@
             size_hint: 1, 0.1
             Button:
                 text: "Encrypt"
-                on_press: root.encrypt(keyphrase,input,4)
+                on_press: root.enc_dec_algorithm(keyphrase,input,4,2)
             Button:
                 text: "Decrypt"
-                on_press: root.decrypt(keyphrase,input,4)
+                on_press: root.enc_dec_algorithm(keyphrase,input,4,1)
 
         GridLayout:
             cols:2
@@ -219,14 +219,12 @@
             Button:
                 size_hint:0.3,0.1
                 text: "Back"
-                on_press: root.manager.current = "main"
-                on_release: root.refresh()
-
-
+                on_press: root.refresh()
+                on_release: root.manager.current = "main"
 
 
             Label:
                 id: status
                 text: ""
                 color: 1,0,0,1
-
+                font_size:20
