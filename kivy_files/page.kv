@@ -3,6 +3,7 @@
 #:include kivy_files//vigenere.kv
 #:include kivy_files//substitution.kv
 #:include kivy_files//vernam.kv
+#:include kivy_files//loading.kv
 
 
 
@@ -21,7 +22,14 @@ WindowManager:
 
     Substitution_Page:
         name:"substit"
+
     Vernam_Page:
+        name: "vernam"
+
+    Loading_Page:
+        name:"loading"
+
+
 
 
 
@@ -50,15 +58,14 @@ WindowManager:
             text: "Choose your cypher!"
             font_size: self.width/25
         Button:
+            font_size: 18
             text: "Ceasar Cipher"
             id: Ceasar
             background_normal: ''
-
             on_press: app.root.current = "cezar"
 
-
-
         Button:
+            font_size: 18
             text: "Atbash"
             id: Atbash
             on_press: app.root.current = "atbash"
@@ -66,6 +73,7 @@ WindowManager:
 
 
         Button:
+            font_size: 18
             text: "Vigenere Cypher"
             id: Veginere
             on_press: app.root.current = "vigenere"
@@ -73,6 +81,7 @@ WindowManager:
 
 
         Button:
+            font_size: 18
             text: "Substitution Cypher"
             id: Substitution
             on_press: app.root.current = "substit"
@@ -80,6 +89,7 @@ WindowManager:
 
 
         Button:
+            font_size: 18
             text: "Vernam Cypher"
             id: Vernam
             on_press: app.root.current = "VernamPage"
@@ -102,6 +112,8 @@ WindowManager:
                 source: "images//awl.jpg"
                 size_hint_y: None
                 height: 100
+
+
 
 
 
