@@ -3,11 +3,12 @@ import algorithms.ciphers.cezar as cz
 import algorithms.ciphers.atbash as atbasz
 import algorithms.ciphers.vigenere as vig
 import algorithms.ciphers.substitution as sub
+import time
+
 
 index_key = "".join((chr(i) for i in range(128)))
 
 def saving_encrypting(choose_encryption_method: int, src_f: str, src_s:str, key):
-    print(choose_encryption_method)
     OriginalFile = open(src_f, "rb")
     EncryptedFile = open(src_s, "w")
     while (byte := OriginalFile.read(1)):
@@ -29,7 +30,9 @@ def saving_encrypting(choose_encryption_method: int, src_f: str, src_s:str, key)
     EncryptedFile.close()
 
 
+
 def reading_decrypting(choose_encryption_method: int, src_s: str, src_f:str, key: int):
+    time.sleep(3)
     EncrypredFile = open(src_s, "r")
     DecryptedFile = open(src_f, "wb")
     wynik = ""
@@ -37,16 +40,16 @@ def reading_decrypting(choose_encryption_method: int, src_s: str, src_f:str, key
         byte = byte.strip()
         byte =  index_key[int(byte)]
         match choose_encryption_method:
-                case 1:
-                    byte = cz.dec_ceasar(key, byte)
-                case 2:
-                    byte = atbasz.toAtBash(byte)
-                case 3:
-                    byte = vig.decryption(key,byte)
-                case 4:
-                    byte = sub.dec_substit(key,byte)
-                case default:
-                    pass
+            case 1:
+                byte = cz.dec_ceasar(int(key), byte)
+            case 2:
+                byte = atbasz.toAtBash(byte)
+            case 3:
+                byte = vig.decryption(key,byte)
+            case 4:
+                byte = sub.dec_substit(key,byte)
+            case default:
+                pass
         wynik = wynik + byte
         if len(wynik) == 2:
             DecryptedFile.write(binascii.unhexlify(wynik))
