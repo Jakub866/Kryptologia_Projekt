@@ -9,14 +9,12 @@
         size_hint: 1, None
         height: self.texture_size[1]
         markup: True
-        text: "Ceasar's Cipher is a simple subtitution cipher.\nYou can use one from this modes:\n \n 1. Load file and set encryption/decryption path\n 2. Insert text in left input box.\n \n \n [b]Keyspace[/b]: Symbols from 1 to 26."
+        text: "Ceasar's Cipher is a simple subtitution cipher.\nYou can use one from this modes:\n \n 1. Load file and set encryption/decryption path\n 2. Insert text in left input box.\n \n If you use both, the loaded file will have a priority \n \n [b]Keyspace[/b]: Symbols from 1 to 26."
         color:1,1,1,1
 
 
 
 <Caesar_Page>:
-
-
     BoxLayout:
         orientation: 'vertical'
         spacing: 10
@@ -33,6 +31,10 @@
                 pos_hint: {"x":0.9, "y":0.9}
                 text:"Help"
                 on_release: Factory.CeasarPopup().open()
+
+
+
+
 
 
         Label:
@@ -67,7 +69,7 @@
                     text: "Load File"
                     on_release: root.set_load()
                     padding_x: 5
-
+                    id: fileLoad
                     multiline:True
                     canvas.before:
                         Color:
@@ -101,7 +103,7 @@
                     text: "Save File"
                     on_release: root.set_save()
                     padding_x: 5
-
+                    id: fileSave
                     multiline:True
                     canvas.before:
                         Color:
@@ -117,7 +119,7 @@
                         text_size: None, self.height
                         size_hint_x: None
                         width: self.texture_size[0]
-                        text: ":"
+                        text: ""
                         id: saveDirectory
 
 
@@ -178,6 +180,7 @@
                             width: 1.5
                             rectangle: self.x, self.y, self.width, self.height
 
+
         GridLayout:
             cols:2
             size_hint: 1,0.1
@@ -209,10 +212,12 @@
             size_hint: 1, 0.1
             Button:
                 text: "Encrypt"
-                on_press: root.encrypt(keyphrase,input,1)
+                id: Encrypt
+                on_press: root.enc_dec_algorithm(keyphrase,input,1,2)
             Button:
                 text: "Decrypt"
-                on_press: root.decrypt(keyphrase,input,1)
+                id: Decrypt
+                on_release: root.enc_dec_algorithm(keyphrase,input,1,1)
 
         GridLayout:
             cols:2
@@ -221,18 +226,14 @@
             Button:
                 size_hint:0.3,0.1
                 text: "Back"
-                on_press: root.manager.current = "main"
-                on_release: root.refresh()
-
-
-
+                on_press: root.refresh()
+                on_release: root.manager.current = "main"
 
             Label:
                 id: status
                 text: ""
                 color: 1,0,0,1
                 font_size:20
-
 
 
 
