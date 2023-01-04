@@ -11,8 +11,8 @@ Wybrane kody:
 - [x] Atbash
 - [x] Vigenère
 - [x] Podstawieniowy
-- [ ] Vernam - In progress
+- [x] Enigma
 
-###### Możliwe do zrobienia 'Enigma'
+
 
 TODO [Link do Trello](https://trello.com/invite/projektkryptologia/ATTI49d7d44d2b7ec85af561c16677f973a8D20CFADB)
