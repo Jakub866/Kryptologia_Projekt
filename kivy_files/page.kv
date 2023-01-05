@@ -2,7 +2,7 @@
 #:include kivy_files//atbash.kv
 #:include kivy_files//vigenere.kv
 #:include kivy_files//substitution.kv
-#:include kivy_files//vernam.kv
+#:include kivy_files//enigma.kv
 #:include kivy_files//loading.kv
 
 
@@ -23,8 +23,8 @@ WindowManager:
     Substitution_Page:
         name:"substit"
 
-    Vernam_Page:
-        name: "vernam"
+    Enigma_Page:
+        name: "enigma"
 
     Loading_Page:
         name:"loading"
@@ -90,9 +90,9 @@ WindowManager:
 
         Button:
             font_size: 18
-            text: "Vernam Cypher"
+            text: "Enigma Machine"
             id: Vernam
-            on_press: app.root.current = "VernamPage"
+            on_press: app.root.current = "enigma"
             background_normal: ''
 
 
@@ -112,9 +112,6 @@ WindowManager:
                 source: "images//awl.jpg"
                 size_hint_y: None
                 height: 100
-
-
-
 
 
 
