@@ -71,9 +71,13 @@ class Page(Screen):
     def enc_dec_algorithm(self, keyphrase, plaintext, algorithm, type):
         input_functions = {1:handle_input_dec, 2: handle_input_enc}
         directory_functions ={1:reading_decrypting, 2: saving_encrypting}
+
+        if not isinstance(keyphrase, list):
+            keyphrase = keyphrase.text
+
         if plaintext.text:
             try:
-                plaintext = input_functions[type](algorithm, plaintext.text, keyphrase.text)
+                plaintext = input_functions[type](algorithm, plaintext.text, keyphrase)
                 self.ids.output.text = plaintext
                 self.status("Completed")
             except:
@@ -87,7 +91,7 @@ class Page(Screen):
 
                 workThread = threading.Thread(
                     target=directory_functions[type],
-                    args=(algorithm,self.ids.loadDirectory.text,self.ids.saveDirectory.text,keyphrase.text))
+                    args=(algorithm,self.ids.loadDirectory.text,self.ids.saveDirectory.text,keyphrase))
 
                 workThread.start()
                 self.status("Algorithm done.")
@@ -123,8 +127,33 @@ class Caesar_Page(Page):
 class Substitution_Page(Page):
     pass
 
-class Vernam_Page(Page):
-    pass
+class Enigma_Page(Page):
+    def keyphrase_creator(self, rotor1, rotor2 ,rotor3 ,plugboard, posRotors, rotateRotor, plaintext, algorithm, type):
+        try:
+            tupleRotor = tuple(map(int, rotateRotor))
+
+            plugboard = plugboard.text.split()
+
+            keyphrase = [int(rotor1.text),int(rotor2.text),int(rotor3.text), plugboard, posRotors.text, tupleRotor]
+            self.enc_dec_algorithm(keyphrase,plaintext,algorithm,type)
+        except:
+            self.status("Wrong keyspace")
+
+    def refresh(self):
+        ids_list = [self.ids.loadDirectory,self.ids.saveDirectory,self.ids.plugboard,self.ids.posRotors,
+                    self.ids.rotateRotor1,self.ids.rotateRotor2,self.ids.rotateRotor3,
+                    self.ids.input, self.ids.output, self.ids.status]
+        for i in ids_list:
+            i.text = ""
+
+    def set_dec(self, block):
+        tmp = int(block.text)
+        block.text = "3" if ((tmp - 1) % 4) == 0 else str(((tmp - 1) % 4))
+
+
+    def set_inc(self, block):
+        tmp = int(block.text)
+        block.text = "1" if ((tmp + 1) % 4) == 0 else str(((tmp + 1) % 4))
 
 class Loading_Page(Screen):
     local = ""
@@ -139,7 +168,6 @@ class Loading_Page(Screen):
         # Waiting for the end of the Enc/Dec thread
         while workThread.is_alive():
             time.sleep(3)
-            print(workThread.is_alive())
         anim.stop(self.loading_image)
         self.edit()
 
@@ -201,6 +229,7 @@ sm.add_widget(Caesar_Page(name ='cezar'))
 sm.add_widget(Atbash_Page(name ='atbash'))
 sm.add_widget(Vigenere_Page(name ='vigenere'))
 sm.add_widget(Substitution_Page(name ="substit"))
+sm.add_widget(Enigma_Page(name ="enigma"))
 sm.add_widget(Loading_Page(name="loading"))
 
 class PageApp(App):
