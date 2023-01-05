@@ -1,4 +1,5 @@
 #:import Factory kivy.factory.Factory
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
 
 <CeasarPopup@Popup>:
     title: 'How to use Ceasar Cipher'
@@ -197,6 +198,7 @@
 
             TextInput:
                 id: keyphrase
+                input_filter: 'int'
                 background_color: 0,0,0,0
                 foreground_color: 0,0,0,0.7
                 canvas.before:
@@ -234,6 +236,12 @@
                 text: ""
                 color: 1,0,0,1
                 font_size:20
+
+
+
+
+
+
 
 
 
