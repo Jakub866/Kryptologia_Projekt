@@ -1,7 +1,5 @@
 
-
 alphabet =''.join(chr(i) for i in range(128))
-print(alphabet)
 
 
 def substit_key(key):
@@ -10,19 +8,17 @@ def substit_key(key):
     key = "".join(dict.fromkeys(key))
     return key
 
-def enc_substit(plaintext, key):
+def enc_substit(key,plaintext):
     key = substit_key(key)
     permutation = dict(zip(alphabet, key))
-    print(permutation)
     result = ""
     for x in plaintext:
         result += permutation[x]
     return result
 
-def dec_substit(cyphertext, key):
+def dec_substit(key,cyphertext):
     key = substit_key(key)
     permutation_revers = dict(zip(key, alphabet))
-    print(permutation_revers)
     result = ""
     for x in cyphertext:
         result += permutation_revers[x]
@@ -30,14 +26,6 @@ def dec_substit(cyphertext, key):
 
 
 
-key = "juljuszuceazar"
-
-plaintext = "nasz plain text jest przerabiany nacholera wie co"
-
-print(f"{enc_substit(plaintext,key)}  zaszyfrowane")
-cyphertext = enc_substit(plaintext,key)
-
-print(dec_substit(cyphertext,key))
 
 
 

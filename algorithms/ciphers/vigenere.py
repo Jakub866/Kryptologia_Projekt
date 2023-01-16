@@ -22,15 +22,16 @@ def dec_vigenere(cyphertext, key):
     secret = "".join(shiftDec(cyphertext[i], key[i % len(key)]) for i in range(len(cyphertext)))
     return secret
 
-key2generate = "Test"
-key = key_vigenere(key2generate)
-plaintext = "test"
-ciphertext = enc_vigenere(plaintext,key)
-print(ciphertext)
 
+def encryption(key, plaintext):
+    key = key_vigenere(key)
+    ciphertext = enc_vigenere(plaintext, key)
+    return ciphertext
 
-decrypt = dec_vigenere(ciphertext,key)
+def decryption(key,ciphertext):
+    key = key_vigenere(key)
+    plaintext = dec_vigenere(ciphertext,key)
+    return plaintext
 
-print(decrypt)
 
 
