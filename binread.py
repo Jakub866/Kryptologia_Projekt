@@ -1,3 +1,4 @@
+
 import binascii
 import algorithms.ciphers.cezar as cz
 import algorithms.ciphers.atbash as atbasz
@@ -166,3 +167,6 @@ def handle_input_dec(choose_encryption_method: int, inp, key):
 #3 literowy string to wybór od jakich liter/znaków zaczynają się rotory.
 #Krotka zawierająca 3 liczby to numer który odpowiada za to w którym momencie rotor zostanie poruszony w kolejną pozycję dodaję dużą ilość złożności.
 #UWAGA nie ma możliwości wyboru reflektora. jest tylko jeden.
+=======
+
+
