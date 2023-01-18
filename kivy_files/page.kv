@@ -4,7 +4,7 @@
 #:include kivy_files//substitution.kv
 #:include kivy_files//enigma.kv
 #:include kivy_files//loading.kv
-
+#:include kivy_files//histogram.kv
 
 
 WindowManager:
@@ -28,6 +28,9 @@ WindowManager:
 
     Loading_Page:
         name:"loading"
+
+    Histogram_Page:
+        name:"histogram"
 
 
 
@@ -112,6 +115,10 @@ WindowManager:
                 source: "images//awl.jpg"
                 size_hint_y: None
                 height: 100
+
+
+
+
 
 
 
