@@ -6,6 +6,14 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+import threading
+
+from kivy.app import App
+from kivy.core.window import Window
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.lang import Builder
+from kivy.uix.button import Button
+from kivy.uix.label import Label
 from kivy.clock import mainthread
 from kivy.animation import Animation
 from kivy.uix.image import Image
@@ -17,7 +25,8 @@ from binread import *
 global workThread
 global Previous
 
-
+global path_load
+global path_save
 
 class FileChoose(Button):
     def __init__(self, **kwargs):
@@ -33,11 +42,9 @@ class WindowManager(ScreenManager):
     pass
 
 class Page(Screen):
-    # remember last opened Page
     def on_enter(self):
         global Previous
         Previous = self.manager.current
-
 
     def refresh(self):
         ids_list = [self.ids.loadDirectory,self.ids.saveDirectory,
@@ -48,24 +55,29 @@ class Page(Screen):
     def status(self,status):
         self.ids.status.text = status
 
-
     def set_load(self):
         try:
+            global path_load
             path_load = str(FileChoose.choose(FileChoose))
             self.ids.loadDirectory.text = path_load[2:len(path_load)-2]
             self.status("File loaded.")
-
         except:
             self.status("Wrong directory")
 
     def set_save(self):
         try:
+            global path_save
             path_save = str(FileChoose.save(FileChoose))
             self.ids.saveDirectory.text = path_save[2:len(path_save)-2]
-
             self.status("Saving directory loaded.")
         except:
             self.status("Error when choosing a path to save")
+
+
+
+
+
+
 
 
     def enc_dec_algorithm(self, keyphrase, plaintext, algorithm, type):
@@ -195,9 +207,12 @@ class Loading_Page(Screen):
         # delete response label
         self.ids.loadingLayout.remove_widget(self.response_label)
         self.ids.loadingLayout.remove_widget(self.response_button)
+        self.ids.loadingLayout.remove_widget(self.histogram_button)
 
         self.manager.current = Previous
 
+    def move(self,*args):
+        self.manager.current = "histogram"
 
     @mainthread
     def edit(self):
@@ -209,6 +224,10 @@ class Loading_Page(Screen):
                                  size_hint=(1,.2),
                                  font_size = 25,
                              )
+        self.histogram_button = Button(text="Show the histogram?",
+                                      size_hint=(1,.2),
+                                      font_size = 25,
+                                      )
         self.response_label = Label(text="Algorithm was succesfully completed",
                                font_size = 50,
                                text_size= (self.width,None),
@@ -218,9 +237,22 @@ class Loading_Page(Screen):
         # Add new response to Loading Page
         self.ids.loadingLayout.add_widget(self.response_label)
         self.ids.loadingLayout.add_widget(self.response_button)
+        self.ids.loadingLayout.add_widget(self.histogram_button)
+
         self.response_button.bind(on_press=self.get_back)
+        self.histogram_button.bind(on_press=self.move)
 
 
+import test1
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
+
+
+class Histogram_Page(Loading_Page):
+    def on_enter(self, *args):
+        print(path_save[2:len(path_save)-2],path_load[2:len(path_load)-2])
+        data = test1.Histogram(path_load[2:len(path_load)-2],path_save[2:len(path_save)-2])
+        data = data.visualization()
+        self.ids.loadingLayout.add_widget(FigureCanvasKivyAgg(data))
 
 kv = Builder.load_file('kivy_files\\page.kv')
 sm = ScreenManager()
@@ -231,7 +263,7 @@ sm.add_widget(Vigenere_Page(name ='vigenere'))
 sm.add_widget(Substitution_Page(name ="substit"))
 sm.add_widget(Enigma_Page(name ="enigma"))
 sm.add_widget(Loading_Page(name="loading"))
-
+sm.add_widget(Histogram_Page(name="histogram"))
 class PageApp(App):
 
     def build(self):
