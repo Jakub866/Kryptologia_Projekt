@@ -1,0 +1,121 @@
+#:include kivy_files//ceasar.kv
+#:include kivy_files//atbash.kv
+#:include kivy_files//vigenere.kv
+#:include kivy_files//substitution.kv
+#:include kivy_files//enigma.kv
+#:include kivy_files//loading.kv
+#:include kivy_files//histogram.kv
+
+
+WindowManager:
+    Main_page:
+        name: "main"
+
+    Caesar_Page:
+        name: "cezar"
+
+    Atbash_Page:
+        name: "atbash"
+
+    Vigenere_Page:
+        name:"vigenere"
+
+    Substitution_Page:
+        name:"substit"
+
+    Enigma_Page:
+        name: "enigma"
+
+    Loading_Page:
+        name:"loading"
+
+    Histogram_Page:
+        name:"histogram"
+
+
+
+
+
+<Label>
+    color: 0,0,0,1
+
+<Main_page>:
+    name: "main"
+
+    GridLayout:
+        size: root.width, root.height
+        spacing: 10
+        padding:25, 10
+        cols:1
+        canvas.before:
+            Color:
+                rgb: (1,0,0,1)
+
+
+        Image:
+            source: "images//logo.png"
+            size_hint_y: None
+            height: 300
+
+        Label:
+            text: "Choose your cypher!"
+            font_size: self.width/25
+        Button:
+            font_size: 18
+            text: "Ceasar Cipher"
+            id: Ceasar
+            background_normal: ''
+            on_press: app.root.current = "cezar"
+
+        Button:
+            font_size: 18
+            text: "Atbash"
+            id: Atbash
+            on_press: app.root.current = "atbash"
+            background_normal: ''
+
+
+        Button:
+            font_size: 18
+            text: "Vigenere Cypher"
+            id: Veginere
+            on_press: app.root.current = "vigenere"
+            background_normal: ''
+
+
+        Button:
+            font_size: 18
+            text: "Substitution Cypher"
+            id: Substitution
+            on_press: app.root.current = "substit"
+            background_normal: ''
+
+
+        Button:
+            font_size: 18
+            text: "Enigma Machine"
+            id: Vernam
+            on_press: app.root.current = "enigma"
+            background_normal: ''
+
+
+
+        GridLayout:
+            cols:3
+
+            Image:
+                source: "images//GitHub.png"
+                size_hint_y: None
+                height: 100
+            Label:
+                text: "Developed by s9145 and s9208"
+                size_hint_y: None
+                height: 100
+            Image:
+                source: "images//awl.jpg"
+                size_hint_y: None
+                height: 100
+
+
+
+
