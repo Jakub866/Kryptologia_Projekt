@@ -1,4 +1,3 @@
-
 import binascii
 import algorithms.ciphers.cezar as cz
 import algorithms.ciphers.atbash as atbasz
@@ -6,8 +5,10 @@ import algorithms.ciphers.vigenere as vig
 import algorithms.ciphers.substitution as sub
 import algorithms.ciphers.enigma as en
 import time
-
+from main_page import App
+from kivy.clock import mainthread
 index_key = "".join((chr(i) for i in range(128)))
+
 
 def enigma_dec_enc(LRotor: int, MRotor: int, RRotor: int, PlugBoard: list, key_set: str,
                    ring_list: tuple, InOtTx: str):
@@ -64,11 +65,16 @@ def enigma_dec_enc(LRotor: int, MRotor: int, RRotor: int, PlugBoard: list, key_s
     return output
 
 
+
+@mainthread
 def saving_encrypting(choose_encryption_method: int, src_f: str, src_s: str, key):
     OriginalFile = open(src_f, "rb")
     EncryptedFile = open(src_s, "w")
+
+    App.get_running_app().root.current = 'loading'
     while (byte := OriginalFile.read(1)):
         non_crypted_double_bytes = bytes.hex(byte)
+        # print(non_crypted_double_bytes)
         for non_crypted_single_bytes in non_crypted_double_bytes:
             match choose_encryption_method:
                 case 1:
@@ -91,11 +97,26 @@ def saving_encrypting(choose_encryption_method: int, src_f: str, src_s: str, key
     EncryptedFile.close()
 
 
+
+
+@mainthread
 def reading_decrypting(choose_encryption_method: int, src_s: str, src_f: str, key):
-    time.sleep(3)
+    tester = open(src_s,"r")
+    screen = App.get_running_app().root.get_screen(App.get_running_app().root.current)
+    try:
+        test = tester.readline()
+        test = index_key[int(test)]
+    except:
+        screen.status("This file do not support this encryption standard")
+        return None
+
+    tester.close()
+    App.get_running_app().root.current = 'loading'
+
     EncrypredFile = open(src_s, "r")
     DecryptedFile = open(src_f, "wb")
     wynik = ""
+
     while (byte := EncrypredFile.readline()):
         byte = byte.strip()
         byte = index_key[int(byte)]
@@ -111,14 +132,19 @@ def reading_decrypting(choose_encryption_method: int, src_s: str, src_f: str, ke
             case 5:
 
                 byte = enigma_dec_enc(key[0], key[1], key[2], key[3],
-                                      key[4], key[5],
-                                      byte)
+                                              key[4], key[5],
+                                              byte)
             case default:
-                pass
+                    pass
         wynik = wynik + byte
         if len(wynik) == 2:
-            DecryptedFile.write(binascii.unhexlify(wynik))
-            wynik = ''
+            try:
+                    DecryptedFile.write(binascii.unhexlify(wynik))
+                    App.get_running_app().root.current = 'loading'
+                    wynik = ''
+            except:
+                screen.status("This file do not support this encryption standard")
+                break
     DecryptedFile.close()
     EncrypredFile.close()
 
@@ -157,16 +183,5 @@ def handle_input_dec(choose_encryption_method: int, inp, key):
                                   inp)
         case default:
             pass
-
-# Przykład enigma_key = [5, 4, 3, ["AB", "BC", "CD"], "MUL", (12, 32, 124)]
-#saving_encrypting(5, "README.md", "ENREADME.MD", None, [3, 2, 1, ["AR", "XO", "EW"], "123", (2, 4, 59)])
-#reading_decrypting(5, "ENREADME.MD", "CHECK.MD", None, [3, 2, 1, ["AR", "XO", "EW"], "123", (2, 4, 59)])
-
-#Pierwsze 3 liczby to wybór rotora od lewej do prawej możliwy wybór: 1-5
-#Kolejnym jest lista dwóch znaków oznaczająca pluggboarda, tj jaka z liter zamieniana jest z jaką.
-#3 literowy string to wybór od jakich liter/znaków zaczynają się rotory.
-#Krotka zawierająca 3 liczby to numer który odpowiada za to w którym momencie rotor zostanie poruszony w kolejną pozycję dodaję dużą ilość złożności.
-#UWAGA nie ma możliwości wyboru reflektora. jest tylko jeden.
-=======
 
 
