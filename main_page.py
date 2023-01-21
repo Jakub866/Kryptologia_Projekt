@@ -1,50 +1,38 @@
 import threading
 
-from kivy.app import App
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.uix.button import Button
 from kivy.uix.label import Label
-import threading
-
-from kivy.app import App
-from kivy.core.window import Window
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.lang import Builder
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-from kivy.clock import mainthread
 from kivy.animation import Animation
 from kivy.uix.image import Image
+from kivy.clock import mainthread
+from kivy.app import App
 
-
-from plyer import filechooser
+from algorithms.blocks import FileChoose,LimitedInput
 from binread import *
 
+"""Global variables watching use of threads, previous sites, localisations of file and algorithms type"""
 global workThread
 global Previous
 
 global path_load
 global path_save
 
-class FileChoose(Button):
-    def __init__(self, **kwargs):
-        super(FileChoose,self).__init__(**kwargs)
+global enc_or_dec
 
-    def choose(self,*args):
-        return filechooser.open_file()
 
-    def save(self,*args):
-        return filechooser.save_file()
-
+"""Init screen manager for fluenty changing pages in app"""
 class WindowManager(ScreenManager):
     pass
 
+"""Main frame of all of the applications windows"""
 class Page(Screen):
     def on_enter(self):
         global Previous
         Previous = self.manager.current
+        self.ids.directoryCheckbox.active = True
 
     def refresh(self):
         ids_list = [self.ids.loadDirectory,self.ids.saveDirectory,
@@ -64,49 +52,79 @@ class Page(Screen):
         except:
             self.status("Wrong directory")
 
+    def checkbox_click(self, instance, value,type):
+        if value is True:
+            match type:
+                case 1:
+                    self.ids.output.disabled = True
+                    self.ids.input.disabled = True
+                    self.ids.output.text = ""
+                    self.ids.input.text = ""
+                    self.ids.inputCheckbox.active = False
+
+                    self.ids.input.background_color = (0, 0, 0, 0.1)
+                    self.ids.output.background_color = (0, 0, 0, 0.1)
+                case 2:
+                    self.ids.fileLoad.disabled = True
+                    self.ids.fileSave.disabled = True
+                    self.ids.loadDirectory.text = ""
+                    self.ids.saveDirectory.text = ""
+                    self.ids.directoryCheckbox.active = False
+
+        else:
+            match type:
+                case 1:
+                    self.ids.output.disabled = False
+                    self.ids.input.disabled = False
+                    self.ids.input.background_color = (0, 0, 0, 0)
+                    self.ids.output.background_color = (0, 0, 0, 0)
+
+                case 2:
+                    self.ids.fileLoad.disabled = False
+                    self.ids.fileSave.disabled = False
+                    self.ids.loadDirectory.background_color = (0, 0, 0, 0)
+                    self.ids.saveDirectory.background_color = (0, 0, 0, 0)
+
+
+
     def set_save(self):
         try:
             global path_save
             path_save = str(FileChoose.save(FileChoose))
             self.ids.saveDirectory.text = path_save[2:len(path_save)-2]
             self.status("Saving directory loaded.")
+
         except:
             self.status("Error when choosing a path to save")
 
 
 
-
-
-
-
-
     def enc_dec_algorithm(self, keyphrase, plaintext, algorithm, type):
+        global enc_or_dec
+        enc_or_dec = type
+
         input_functions = {1:handle_input_dec, 2: handle_input_enc}
         directory_functions ={1:reading_decrypting, 2: saving_encrypting}
 
-        if not isinstance(keyphrase, list):
-            keyphrase = keyphrase.text
+        if keyphrase == "":
+            self.status("Wrong keyspace")
 
-        if plaintext.text:
-            try:
-                plaintext = input_functions[type](algorithm, plaintext.text, keyphrase)
-                self.ids.output.text = plaintext
-                self.status("Completed")
-            except:
-                self.status("Wrong keyspace. Check Help")
+        if self.ids.loadDirectory.text == self.ids.saveDirectory.text != "":
+            self.status("Saving and loading directory are the same!")
 
         if self.ids.loadDirectory.text and self.ids.saveDirectory.text:
             try:
                 self.status("")
-                self.manager.current = "loading"
                 global workThread
 
                 workThread = threading.Thread(
-                    target=directory_functions[type],
-                    args=(algorithm,self.ids.loadDirectory.text,self.ids.saveDirectory.text,keyphrase))
+                        target=directory_functions[type],
+                        args=(algorithm,self.ids.loadDirectory.text,self.ids.saveDirectory.text,keyphrase))
 
                 workThread.start()
                 self.status("Algorithm done.")
+
+
             except:
                 self.status("Wrong keyspace. Check Help")
 
@@ -115,8 +133,19 @@ class Page(Screen):
 
         if not self.ids.loadDirectory.text and self.ids.saveDirectory.text:
             self.status("There is no load directory")
-        if keyphrase and not self.ids.loadDirectory.text and not self.ids.input.text:
+        if not keyphrase and not self.ids.loadDirectory.text and not self.ids.input.text:
             self.status("Wrong input")
+
+        if keyphrase and not plaintext.text:
+            self.status("There is no input text")
+
+        try:
+            plaintext = input_functions[type](algorithm, plaintext.text, keyphrase)
+            self.ids.output.text = plaintext
+            self.status("Completed")
+
+        except:
+            self.status("Wrong keyspace. Check Help")
 
 
 
@@ -145,9 +174,14 @@ class Enigma_Page(Page):
             tupleRotor = tuple(map(int, rotateRotor))
 
             plugboard = plugboard.text.split()
+            max_len = 2
+            if all(len(elem) == max_len for elem in plugboard):
+                keyphrase = [int(rotor1.text), int(rotor2.text), int(rotor3.text), plugboard, posRotors.text,
+                             tupleRotor]
+                self.enc_dec_algorithm(keyphrase, plaintext, algorithm, type)
+            else:
+                self.status("Wrong dimension of plugboard")
 
-            keyphrase = [int(rotor1.text),int(rotor2.text),int(rotor3.text), plugboard, posRotors.text, tupleRotor]
-            self.enc_dec_algorithm(keyphrase,plaintext,algorithm,type)
         except:
             self.status("Wrong keyspace")
 
@@ -160,12 +194,12 @@ class Enigma_Page(Page):
 
     def set_dec(self, block):
         tmp = int(block.text)
-        block.text = "3" if ((tmp - 1) % 4) == 0 else str(((tmp - 1) % 4))
+        block.text = "5" if ((tmp - 1) % 6) == 0 else str(((tmp - 1) % 6))
 
 
     def set_inc(self, block):
         tmp = int(block.text)
-        block.text = "1" if ((tmp + 1) % 4) == 0 else str(((tmp + 1) % 4))
+        block.text = "1" if ((tmp + 1) % 6) == 0 else str(((tmp + 1) % 6))
 
 class Loading_Page(Screen):
     local = ""
@@ -212,7 +246,12 @@ class Loading_Page(Screen):
         self.manager.current = Previous
 
     def move(self,*args):
+        # delete response label
+        self.ids.loadingLayout.remove_widget(self.response_label)
+        self.ids.loadingLayout.remove_widget(self.response_button)
+        self.ids.loadingLayout.remove_widget(self.histogram_button)
         self.manager.current = "histogram"
+
 
     @mainthread
     def edit(self):
@@ -224,7 +263,7 @@ class Loading_Page(Screen):
                                  size_hint=(1,.2),
                                  font_size = 25,
                              )
-        self.histogram_button = Button(text="Show the histogram?",
+        self.histogram_button = Button(text="Show the histogram",
                                       size_hint=(1,.2),
                                       font_size = 25,
                                       )
@@ -243,16 +282,23 @@ class Loading_Page(Screen):
         self.histogram_button.bind(on_press=self.move)
 
 
-import test1
+from algorithms.plot import Histogram
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
 
-class Histogram_Page(Loading_Page):
+class Histogram_Page(Screen):
     def on_enter(self, *args):
+        print(enc_or_dec)
         print(path_save[2:len(path_save)-2],path_load[2:len(path_load)-2])
-        data = test1.Histogram(path_load[2:len(path_load)-2],path_save[2:len(path_save)-2])
-        data = data.visualization()
-        self.ids.loadingLayout.add_widget(FigureCanvasKivyAgg(data))
+        self.data = Histogram(path_load[2:len(path_load) - 2], path_save[2:len(path_save) - 2], enc_or_dec)
+        self.data = self.data.visualization()
+        self.data = FigureCanvasKivyAgg(self.data)
+        self.ids.loadingLayout.add_widget(self.data)
+
+    @mainthread
+    def get_back(self):
+        self.ids.loadingLayout.remove_widget(self.data)
+        self.manager.current = Previous
 
 kv = Builder.load_file('kivy_files\\page.kv')
 sm = ScreenManager()
