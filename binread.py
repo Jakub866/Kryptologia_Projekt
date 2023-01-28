@@ -92,7 +92,6 @@ def saving_encrypting(choose_encryption_method: int, src_f: str, src_s: str, key
 
 
 def reading_decrypting(choose_encryption_method: int, src_s: str, src_f: str, key):
-    time.sleep(3)
     EncrypredFile = open(src_s, "r")
     DecryptedFile = open(src_f, "wb")
     wynik = ""
