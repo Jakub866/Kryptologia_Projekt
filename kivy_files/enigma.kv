@@ -9,7 +9,7 @@
         size_hint: 1, None
         height: self.texture_size[1]
         markup: True
-        text: "Way of use: \n[b]Set 3 rotor position[/b]\n\n[b]Set plugboard[/b]: pairs of ASII symbols seperated by whitespace (eg: AB C; 3F)\n\n[b]Set three initial rotor position:[/b] Three ASCII symbols (eg: A;5 )\n\n[b]Set three types of rotation:[/b] each of one is up to three numeric symbols (eg: (1, 134, 19)\n\nYou can use one from this modes:\n \n 1. Load file and set encryption/decryption path\n 2. Insert text in left input box.\n \nIf you use both, the loaded file will have a priority \n \n[b]Keyspace[/b]: All ASCII symbols"
+        text: "Way of use: \n[b]Set 3 rotor position[/b]\n\n[b]Set plugboard[/b]: pairs of ASII symbols seperated by whitespace (eg: AB C; 3F)\n\n[b]Set three initial rotor position:[/b] Three ASCII symbols (eg: A;5 )\n\n[b]Set three types of rotation:[/b] each of one is up to three numeric symbols (eg: (1, 134, 19)\n\nYou can use one from this modes:\n \n 1. Load file and set encryption/decryption path\n 2. Insert text in left input box.\n \n \n[b]Keyspace[/b]: All ASCII symbols"
         color:1,1,1,1
 
 
@@ -40,9 +40,17 @@
             font_size: 18
 
 
-        Label:
-            text: "Choose the directory to encrypt"
-            size_hint: 1,0.1
+        GridLayout:
+            cols:2
+            size_hint: 0.4,0.1
+            pos_hint: { 'top' : .95, 'right': .60}
+            CheckBox:
+                color:.294, .761, .623
+                on_active: root.checkbox_click(self, self.active,1)
+                id: directoryCheckbox
+            Label:
+                text: "Choose the directory to encrypt"
+
 
 
         GridLayout:
@@ -65,7 +73,7 @@
                     text: "Load File"
                     on_release: root.set_load()
                     padding_x: 5
-
+                    id:fileLoad
                     multiline:True
                     canvas.before:
                         Color:
@@ -99,7 +107,7 @@
                     text: "Save File"
                     on_release: root.set_save()
                     padding_x: 5
-
+                    id:fileSave
                     multiline:True
                     canvas.before:
                         Color:
@@ -119,9 +127,18 @@
                         id: saveDirectory
 
 
-        Label:
-            text: "Or use input boxes"
-            size_hint: 1,0.1
+        GridLayout:
+            cols: 2
+            size_hint: 0.4,0.1
+            pos_hint: { 'top' : .95, 'right': .60}
+
+            CheckBox:
+                color:.294, .761, .623
+                on_active: root.checkbox_click(self, self.active,2)
+                id:inputCheckbox
+            Label:
+                text: "Or use input boxes"
+                size_hint: 1,0.1
 
         GridLayout:
             cols: 2
@@ -296,7 +313,8 @@
                         width: 1.5
                         rectangle: self.x, self.y, self.width, self.height
 
-            TextInput:
+            LimitedInput:
+                max_characters: 2
                 id: posRotors
                 background_color: 0,0,0,0
                 foreground_color: 0,0,0,0.7
@@ -328,7 +346,8 @@
 
             GridLayout:
                 cols:3
-                TextInput:
+                LimitedInput:
+                    max_characters: 2
                     id: rotateRotor1
                     input_filter: 'int'
                     background_color: 0,0,0,0
@@ -343,7 +362,8 @@
                             width: 1.5
                             rectangle: self.x, self.y, self.width, self.height
 
-                TextInput:
+                LimitedInput:
+                    max_characters: 2
                     id: rotateRotor2
                     input_filter: 'int'
                     background_color: 0,0,0,0
@@ -358,7 +378,8 @@
                             width: 1.5
                             rectangle: self.x, self.y, self.width, self.height
 
-                TextInput:
+                LimitedInput:
+                    max_characters: 2
                     id: rotateRotor3
                     input_filter: 'int'
                     background_color: 0,0,0,0
