@@ -6,6 +6,10 @@
 
 Język programowania `Python`
 
+Oprogramowanie to wykonuje szyfrowanie szyframi historycznymi, wykorzystując alfabet ASCII. Dzięki autoreskiemu GUI, zawpewniamy łatwy dostep do histogrmu pokazującego rozkałd częstotliwości występowania symobli dla tesktów jawnych jak i zaszyfrowanych. Umożliwamy szyfrowanie danych o małej ilości znaków wprowadzonych z kalwiatury oraz dużych plików za pomoca wyboru ścieżki odczytu oraz zapisu. Algorytmy zostały stworzone w sposób autorski bez implementacji zewnętrznych bibliotek.
+Interfejs graficzny został stworzony za pomocą pakietu bibliotek Kivy oraz matplotlib. Drugi elemnt służy do generowania histogramów. Wymagane pakiety znajdują się w pliku req.txt. Sposób instalacji został opisny w dokumentacji technicznej. Opgoramowanie zawiera również wbudowny system pomocy użytkownikowi.
+
+
 Wybrane kody:
 - [x] Cesar
 - [x] Atbash
