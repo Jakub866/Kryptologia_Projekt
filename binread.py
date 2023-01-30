@@ -126,13 +126,13 @@ def reading_decrypting(choose_encryption_method: int, src_s: str, src_f: str, ke
                     pass
         wynik = wynik + byte
         if len(wynik) == 2:
-            try:
+            #try:
                     DecryptedFile.write(binascii.unhexlify(wynik))
-                    App.get_running_app().root.current = 'loading'
+                    #App.get_running_app().root.current = 'loading'
                     wynik = ''
-            except:
-                screen.status("This file do not support this encryption standard")
-                break
+            #except:
+                #screen.status("This file do not support this encryption standard")
+                #break
     DecryptedFile.close()
     EncrypredFile.close()
 
